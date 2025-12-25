@@ -1,17 +1,37 @@
-struct ListNode* sortList(struct ListNode* head) {
-    struct ListNode* temp1=head,*temp2=head;
-    int blah;
-    if(head==NULL){
-        return head;
-    }
-    for(temp1=head;temp1!=NULL;temp1=temp1->next){
-        for(temp2=temp1->next;temp2!=NULL;temp2=temp2->next){
-            if(temp1->val>=temp2->val){
-                blah=temp1->val;
-                temp1->val=temp2->val;
-                temp2->val=blah;
-            }
+struct ListNode* merge(struct ListNode* l1, struct ListNode* l2) {
+    struct ListNode dummy;
+    struct ListNode* tail = &dummy;
+    dummy.next = NULL;
+
+    while (l1 && l2) {
+        if (l1->val < l2->val) {
+            tail->next = l1;
+            l1 = l1->next;
+        } else {
+            tail->next = l2;
+            l2 = l2->next;
         }
+        tail = tail->next;
     }
-    return head;
+    tail->next = l1 ? l1 : l2;
+    return dummy.next;
+}
+
+struct ListNode* sortList(struct ListNode* head) {
+    if (!head || !head->next)
+        return head;
+
+    struct ListNode *slow = head, *fast = head->next;
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    struct ListNode* mid = slow->next;
+    slow->next = NULL;
+
+    struct ListNode* left = sortList(head);
+    struct ListNode* right = sortList(mid);
+
+    return merge(left, right);
 }
