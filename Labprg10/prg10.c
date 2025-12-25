@@ -1,0 +1,69 @@
+#include <stdio.h>
+
+int ht[100], m;
+
+void insert(int key) {
+    int index = key % m;
+    int start = index;
+
+    while (ht[index] != -1) {
+        index = (index + 1) % m;
+        if (index == start) {
+            printf("Hash table is full\n");
+            return;
+        }
+    }
+    ht[index] = key;
+    printf("Key %d inserted at address %d\n", key, index);
+}
+
+void display() {
+    int i;
+    printf("Hash Table:\n");
+    for (i = 0; i < m; i++) {
+        if (ht[i] == -1)
+            printf("%d : Empty\n", i);
+        else
+            printf("%d : %d\n", i, ht[i]);
+    }
+}
+
+int main() {
+    int n, key, i, choice;
+
+    printf("Enter size of hash table: ");
+    scanf("%d", &m);
+
+    for (i = 0; i < m; i++)
+        ht[i] = -1;
+
+    printf("Enter number of keys: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        printf("Enter key: ");
+        scanf("%d", &key);
+        insert(key);
+    }
+
+    while (1) {
+        printf("\n1.Insert\n2.Display\n3.Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                printf("Enter key: ");
+                scanf("%d", &key);
+                insert(key);
+                break;
+            case 2:
+                display();
+                break;
+            case 3:
+                return 0;
+            default:
+                printf("Invalid choice\n");
+        }
+    }
+}
+
